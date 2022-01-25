@@ -16,7 +16,13 @@ public class Snake : MonoBehaviour
             _direction = Vector2.up;
         else if(Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
             _direction = Vector2.down;
+    }
 
-        transform.position += _direction * _movementSpeed * Time.deltaTime;
+    private void FixedUpdate()
+    {
+        transform.position = new Vector3(
+            Mathf.Round(transform.position.x) + _direction.x,
+            Mathf.Round(transform.position.y) + _direction.y,
+            0f);
     }
 }
