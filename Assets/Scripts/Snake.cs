@@ -5,13 +5,15 @@ public class Snake : MonoBehaviour
 {
     [SerializeField] private Transform _segmentPrefab;
 
+    [SerializeField] private int _startSegmentsAmount = 4;
+
     private List<Transform> _segments = new List<Transform>();
 
     private Vector3 _direction = Vector2.right;
 
     private void Start()
     {
-        _segments.Add(transform);
+        ResetRound();
     }
 
     private void Update()
@@ -43,6 +45,8 @@ public class Snake : MonoBehaviour
     {
         if (collision.CompareTag("Food"))
             Grow();
+        else if (collision.CompareTag("Obstacle"))
+            ResetRound();
     }
 
     private void Grow()
@@ -52,5 +56,25 @@ public class Snake : MonoBehaviour
         newSegment.position = _segments[_segments.Count - 1].position;
 
         _segments.Add(newSegment);
+    }
+
+    private void ResetRound()
+    {
+        foreach (Transform segment in _segments)
+        {
+            if(_segments.IndexOf(segment) != 0)
+                Destroy(segment.gameObject);
+        }
+
+        _segments.Clear();
+        _segments.Add(transform);
+
+        for (int i = 0; i < _startSegmentsAmount; i++)
+        {
+            _segments.Add(Instantiate(_segmentPrefab));
+        }
+
+        transform.position = Vector2.zero;
+        _direction = Vector2.right;
     }
 }
